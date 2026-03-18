@@ -36,7 +36,9 @@ export default function AuthPage() {
     setLoading(false);
 
     if (signInError) {
-      setError(signInError.message);
+      setError(
+        signInError.message.replace(/magic link/gi, "login link")
+      );
       return;
     }
 
@@ -66,7 +68,7 @@ export default function AuthPage() {
             Check your email
           </h1>
           <p className="mt-2 text-center text-sm text-slate-600">
-            We sent a magic link to <strong>{email}</strong>. Click it to sign
+            We sent a login link to <strong>{email}</strong>. Click it to sign
             in.
           </p>
           <p className="mt-4 text-center text-xs text-slate-500">
@@ -111,7 +113,7 @@ export default function AuthPage() {
             Sign in or sign up
           </h1>
           <p className="mt-1 text-sm text-slate-600">
-            Enter your email and we&apos;ll send you a magic link. No password
+            Enter your email and we&apos;ll send you a login link. No password
             needed.
           </p>
 
@@ -146,7 +148,7 @@ export default function AuthPage() {
               disabled={loading}
               className="w-full rounded-xl bg-[#1B3A2D] px-4 py-3 text-sm font-semibold text-white shadow-[0_4px_6px_rgba(0,0,0,0.07),0_8px_24px_rgba(27,58,45,0.25)] transition-colors hover:bg-[#244d3a] disabled:opacity-60"
             >
-              {loading ? "Sending link…" : "Send magic link"}
+              {loading ? "Sending link…" : "Submit"}
             </button>
           </form>
 
