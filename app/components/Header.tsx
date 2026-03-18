@@ -51,11 +51,14 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <button className="hidden text-xs font-medium text-slate-600 hover:text-[#1B3A2D] sm:inline-flex">
-            Login
-          </button>
           <a
-            href="#cta"
+            href="/auth"
+            className="hidden text-xs font-medium text-slate-600 hover:text-[#1B3A2D] sm:inline-flex"
+          >
+            Login
+          </a>
+          <a
+            href="/auth"
             className="inline-flex items-center gap-2 rounded-full bg-[#1B3A2D] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_6px_18px_rgba(27,58,45,0.5)] hover:bg-[#18402d] sm:px-5 sm:text-sm"
           >
             <span className="hidden sm:inline">Get Started Free</span>

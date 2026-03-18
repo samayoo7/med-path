@@ -127,7 +127,7 @@ export function Hero() {
           className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center"
         >
           <a
-            href="#cta"
+            href="/auth"
             className="inline-flex items-center justify-center rounded-2xl bg-[#1B3A2D] px-8 py-4 text-sm font-semibold text-white shadow-[0_4px_6px_rgba(0,0,0,0.07),0_8px_24px_rgba(27,58,45,0.25)] transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#244d3a] hover:shadow-[0_8px_30px_rgba(27,58,45,0.40)]"
           >
             Get Started Free

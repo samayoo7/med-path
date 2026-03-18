@@ -7,7 +7,7 @@ export const mentorCards = [
     name: "Dr. Ananya Rao",
     specialty: "MD Medicine Resident",
     college: "AIIMS Delhi",
-    stage: "PG · 2nd Year",
+    course: "PG · 2nd Year",
     available: true,
     color: "bg-sky-500",
   },
@@ -15,7 +15,7 @@ export const mentorCards = [
     name: "Dr. Karthik Menon",
     specialty: "DM Cardiology",
     college: "CMC Vellore",
-    stage: "DM · 1st Year",
+    course: "DM · 1st Year",
     available: true,
     color: "bg-emerald-500",
   },
@@ -23,7 +23,7 @@ export const mentorCards = [
     name: "Dr. Sneha Iyer",
     specialty: "MS Ophthalmology",
     college: "KMC Manipal",
-    stage: "MS · Senior Resident",
+    course: "MS · Senior Resident",
     available: false,
     color: "bg-indigo-500",
   },
@@ -76,7 +76,7 @@ export const featureCards = [
   {
     title: "Mentor Directory",
     description:
-      "Search seniors by specialty, college, exam, or stage — and see who is actually available.",
+      "Search seniors by specialty, college, exam, or course — and see who is actually available.",
     badge: "Browse seniors",
   },
   {
@@ -94,12 +94,12 @@ export const featureCards = [
   {
     title: "Privacy First",
     description:
-      "Only your name, college, and stage are visible by default. No phone numbers, ever.",
+      "Only your name, college, and course are visible by default. No phone numbers, ever.",
     badge: "Minimal profile",
   },
 ] as const;
 
-export const stageTags = [
+export const courseTags = [
   "MBBS Y1–Y4",
   "Internship",
   "NEET PG Prep",
@@ -119,7 +119,7 @@ export const howItWorksSteps = [
   },
   {
     title: "Find your senior",
-    description: "Browse by specialty, college, or stage.",
+    description: "Browse by specialty, college, or course.",
   },
   {
     title: "Start the conversation",
@@ -133,7 +133,7 @@ export const menteeFeatures = [
   "Real-time Chat",
   "Completely Free",
   "Privacy First — no phone number, no government ID",
-  "For Every Stage — MBBS to Super Specialty",
+  "For Every Course — MBBS to Super Specialty",
 ] as const;
 
 export const mentorFeatures = [

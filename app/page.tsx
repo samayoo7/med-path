@@ -4,7 +4,7 @@ import {
   Header,
   Hero,
   Features,
-  StageSection,
+  CourseSection,
   StatsSection,
   Testimonial,
   CTABanner,
@@ -22,7 +22,7 @@ export default function Home() {
       >
         <Hero />
         <Features />
-        <StageSection />
+        <CourseSection />
         <StatsSection />
         <Testimonial />
         <CTABanner />

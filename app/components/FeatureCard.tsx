@@ -156,7 +156,7 @@ function PrivacyFirstMockup() {
         </div>
         <div className="border-b border-gray-50 pb-2">
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-            Stage
+            Course
           </p>
           <p className="text-sm font-medium text-[#0D1F17]">3rd Year MBBS</p>
         </div>

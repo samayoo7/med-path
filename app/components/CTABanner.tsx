@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export function CTABanner() {
@@ -20,13 +21,19 @@ export function CTABanner() {
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:w-auto sm:flex-row">
-          <button className="inline-flex items-center justify-center rounded-full border border-emerald-100 bg-transparent px-6 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-emerald-50/10">
+          <Link
+            href="/auth"
+            className="inline-flex items-center justify-center rounded-full border border-emerald-100 bg-transparent px-6 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-emerald-50/10"
+          >
             See a Demo
             <ArrowRight className="ml-2 h-4 w-4" />
-          </button>
-          <button className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#1B3A2D] shadow-sm hover:bg-emerald-50">
+          </Link>
+          <Link
+            href="/auth"
+            className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#1B3A2D] shadow-sm hover:bg-emerald-50"
+          >
             Get Started Free
-          </button>
+          </Link>
         </div>
       </div>
     </section>

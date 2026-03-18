@@ -1,6 +1,6 @@
-import { stageTags } from "../data";
+import { courseTags } from "../data";
 
-export function StageSection() {
+export function CourseSection() {
   return (
     <section
       id="how-it-works"
@@ -8,7 +8,7 @@ export function StageSection() {
     >
       <div className="space-y-6">
         <p className="inline-flex items-center gap-2 rounded-full bg-[#E6F4EC] px-4 py-1 text-[11px] font-medium text-[#1B3A2D]">
-          ✦ FOR EVERY STAGE
+          ✦ FOR EVERY COURSE
         </p>
         <div className="space-y-3">
           <h2 className="text-2xl font-extrabold text-[#0D1F17] sm:text-3xl">
@@ -21,7 +21,7 @@ export function StageSection() {
         </div>
         <div className="mt-4 overflow-x-auto">
           <div className="flex min-w-max flex-wrap gap-2">
-            {stageTags.map((tag) => (
+            {courseTags.map((tag) => (
               <span
                 key={tag}
                 className="inline-flex items-center rounded-full border border-emerald-200 bg-white px-3 py-1 text-[11px] font-medium text-[#1B3A2D]"

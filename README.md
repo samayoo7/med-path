@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Supabase Setup
+
+1. Copy `.env.local.example` to `.env.local` and add your Supabase URL and anon key.
+2. Run migrations (Supabase CLI or paste SQL from `supabase/migrations/` into the Dashboard SQL editor).
+
 ## Getting Started
 
 First, run the development server:
