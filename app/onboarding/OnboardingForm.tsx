@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { upsertMenteeProfile } from "./actions";
-import { COURSES } from "@/lib/validations/profile";
+import { COURSES, SPECIALITIES } from "@/lib/validations/profile";
 import { Select } from "@/app/components/Select";
 import { CollegeSearchInput } from "@/app/components/CollegeSearchInput";
 
 export function OnboardingForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [course, setCourse] = useState<string>("");
 
   async function handleSubmit(formData: FormData) {
     setError(null);
@@ -27,7 +28,7 @@ export function OnboardingForm() {
       <div>
         <label
           htmlFor="display_name"
-          className="block text-xs font-medium text-slate-700"
+          className="block text-sm font-medium text-slate-700"
         >
           Display name <span className="text-red-500">*</span>
         </label>
@@ -39,22 +40,22 @@ export function OnboardingForm() {
           placeholder="How seniors will see you"
           disabled={loading}
           maxLength={50}
-          className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-[#1B3A2D] placeholder:text-slate-400 focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60"
+          className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-[#1B3A2D] placeholder:text-slate-400 focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60"
         />
       </div>
 
       <div>
         <label
           htmlFor="college_id"
-          className="block text-xs font-medium text-slate-700"
+          className="block text-sm font-medium text-slate-700"
         >
-          College <span className="text-red-500">*</span>
+          Current Institution <span className="text-red-500">*</span>
         </label>
         <div className="mt-1.5">
           <CollegeSearchInput
             id="college_id"
             name="college_id"
-            placeholder="Search your college (min 3 characters)"
+            placeholder="Search your institution (min 3 characters)"
             required
             disabled={loading}
           />
@@ -64,7 +65,7 @@ export function OnboardingForm() {
       <div>
         <label
           htmlFor="course"
-          className="block text-xs font-medium text-slate-700"
+          className="block text-sm font-medium text-slate-700"
         >
           Course <span className="text-red-500">*</span>
         </label>
@@ -76,14 +77,43 @@ export function OnboardingForm() {
             placeholder="Select your course"
             required
             disabled={loading}
+            value={course}
+            onChange={(v) => setCourse(v)}
           />
         </div>
       </div>
 
+      {course && SPECIALITIES[course as keyof typeof SPECIALITIES]?.length > 0 ? (
+        <div>
+          <label
+            htmlFor="speciality"
+            className="block text-sm font-medium text-slate-700"
+          >
+            Speciality <span className="text-red-500">*</span>
+          </label>
+          <div className="mt-1.5">
+            <Select
+              key={course}
+              id="speciality"
+              name="speciality"
+              options={SPECIALITIES[course as keyof typeof SPECIALITIES].map((s) => ({
+                value: s,
+                label: s,
+              }))}
+              placeholder="Select your speciality"
+              required
+              disabled={loading}
+            />
+          </div>
+        </div>
+      ) : (
+        <input type="hidden" name="speciality" value="" />
+      )}
+
       <div>
         <label
           htmlFor="bio"
-          className="block text-xs font-medium text-slate-700"
+          className="block text-sm font-medium text-slate-700"
         >
           Bio <span className="text-slate-400">(optional)</span>
         </label>
@@ -94,9 +124,9 @@ export function OnboardingForm() {
           placeholder="A short intro for seniors (e.g. interests, goals)"
           disabled={loading}
           maxLength={500}
-          className="mt-1.5 w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-[#1B3A2D] placeholder:text-slate-400 focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60"
+          className="mt-1.5 w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-[#1B3A2D] placeholder:text-slate-400 focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60"
         />
-        <p className="mt-1 text-xs text-slate-500">Max 500 characters</p>
+        <p className="mt-1 text-sm text-slate-500">Max 500 characters</p>
       </div>
 
       {error && (
@@ -108,7 +138,7 @@ export function OnboardingForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-[#1B3A2D] px-4 py-3 text-sm font-semibold text-white shadow-[0_4px_6px_rgba(0,0,0,0.07),0_8px_24px_rgba(27,58,45,0.25)] transition-colors hover:bg-[#244d3a] disabled:opacity-60"
+        className="w-full rounded-xl bg-[#1B3A2D] px-4 py-3 text-base font-semibold text-white shadow-[0_4px_6px_rgba(0,0,0,0.07),0_8px_24px_rgba(27,58,45,0.25)] transition-colors hover:bg-[#244d3a] disabled:opacity-60"
       >
         {loading ? "Saving…" : "Complete profile"}
       </button>

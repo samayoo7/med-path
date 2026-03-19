@@ -28,6 +28,7 @@ export default async function ProfilePage() {
       id,
       display_name,
       course,
+      speciality,
       bio,
       role,
       created_at,
@@ -114,6 +115,17 @@ export default async function ProfilePage() {
               {profile.course}
             </p>
           </div>
+
+          {profile.speciality && (
+            <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Speciality
+              </p>
+              <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
+                {profile.speciality}
+              </p>
+            </div>
+          )}
 
           {profile.bio && (
             <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">

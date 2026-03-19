@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Override browser autofill on auth page so input keeps intended styling and icon stays visible */
+.auth-page input:-webkit-autofill,
+.auth-page input:-webkit-autofill:hover,
+.auth-page input:-webkit-autofill:focus,
+.auth-page input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgb(255, 255, 255) inset !important;
+  box-shadow: 0 0 0 30px rgb(255, 255, 255) inset !important;
+  -webkit-text-fill-color: rgb(27, 58, 45) !important;
+  caret-color: rgb(27, 58, 45);
+}

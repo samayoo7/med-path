@@ -16,6 +16,7 @@ interface SelectProps {
   required?: boolean;
   disabled?: boolean;
   value?: string;
+  onChange?: (value: string) => void;
   className?: string;
 }
 
@@ -27,11 +28,16 @@ export function Select({
   required,
   disabled,
   value = "",
+  onChange,
   className = "",
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   const selectedLabel =
     options.find((o) => o.value === selectedValue)?.label ?? placeholder;
@@ -76,7 +82,7 @@ export function Select({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-required={required}
-        className={`w-full rounded-xl border border-slate-200 bg-white py-3 pl-4 pr-12 text-left text-sm text-[#1B3A2D] focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60 ${className}`}
+        className={`w-full rounded-xl border border-slate-200 bg-white py-3 pl-4 pr-12 text-left text-base text-[#1B3A2D] focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60 ${className}`}
       >
         <span className={selectedValue ? "" : "text-slate-400"}>
           {selectedLabel}
@@ -103,9 +109,10 @@ export function Select({
                 type="button"
                 onClick={() => {
                   setSelectedValue(opt.value);
+                  onChange?.(opt.value);
                   setIsOpen(false);
                 }}
-                className={`block w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 ${
+                className={`block w-full px-4 py-2.5 text-left text-base hover:bg-slate-50 ${
                   selectedValue === opt.value
                     ? "bg-[#E6F4F1] text-[#1B3A2D]"
                     : "text-slate-700"

@@ -18,6 +18,7 @@ export async function upsertMenteeProfile(formData: FormData) {
     display_name: formData.get("display_name") as string,
     college_id: formData.get("college_id") as string,
     course: formData.get("course") as string,
+    speciality: (formData.get("speciality") as string) || undefined,
     bio: (formData.get("bio") as string) || undefined,
   };
 
@@ -27,7 +28,7 @@ export async function upsertMenteeProfile(formData: FormData) {
     return { error: firstIssue?.message ?? "Invalid input" };
   }
 
-  const { display_name, college_id, course, bio } = parsed.data;
+  const { display_name, college_id, course, speciality, bio } = parsed.data;
 
   const { error } = await supabase.from("profiles").upsert(
     {
@@ -35,6 +36,7 @@ export async function upsertMenteeProfile(formData: FormData) {
       display_name,
       college_id,
       course,
+      speciality: speciality?.trim() || null,
       bio: bio || null,
       role: "mentee",
     },

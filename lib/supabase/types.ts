@@ -39,6 +39,7 @@ export interface Database {
           display_name: string;
           college_id: string;
           course: string;
+          speciality: string | null;
           bio: string | null;
           role: "mentee" | "mentor";
           created_at: string;
@@ -50,6 +51,7 @@ export interface Database {
           display_name: string;
           college_id: string;
           course: string;
+          speciality?: string | null;
           bio?: string | null;
           role?: "mentee" | "mentor";
           created_at?: string;
@@ -61,6 +63,7 @@ export interface Database {
           display_name?: string;
           college_id?: string;
           course?: string;
+          speciality?: string | null;
           bio?: string | null;
           role?: "mentee" | "mentor";
           created_at?: string;

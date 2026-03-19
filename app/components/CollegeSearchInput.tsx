@@ -149,7 +149,7 @@ export function CollegeSearchInput({
           readOnly={!!selected}
           placeholder={placeholder}
           autoComplete="off"
-          className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-4 pr-12 text-sm text-[#1B3A2D] placeholder:text-slate-400 focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60 read-only:cursor-default read-only:bg-slate-50/50"
+          className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-4 pr-12 text-base text-[#1B3A2D] placeholder:text-slate-400 focus:border-[#2BB5A0] focus:outline-none focus:ring-2 focus:ring-[#2BB5A0]/20 disabled:opacity-60 read-only:cursor-default read-only:bg-slate-50/50"
         />
         <div className="absolute right-4 top-1/2 -translate-y-1/2">
           {selected ? (
@@ -192,7 +192,7 @@ export function CollegeSearchInput({
                 <button
                   type="button"
                   onClick={() => handleSelect(college)}
-                  className={`block w-full px-4 py-2.5 text-left text-sm hover:bg-slate-50 ${
+                  className={`block w-full px-4 py-2.5 text-left text-base hover:bg-slate-50 ${
                     selected?.id === college.id
                       ? "bg-[#E6F4F1] text-[#1B3A2D]"
                       : "text-slate-700"
