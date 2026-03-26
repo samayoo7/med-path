@@ -22,7 +22,7 @@ export default async function ProfilePage() {
     redirect("/auth");
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select(`
       id,
@@ -31,8 +31,8 @@ export default async function ProfilePage() {
       speciality,
       bio,
       role,
-      created_at,
-      colleges (
+      college_id,
+      colleges!college_id (
         name,
         city,
         state_name
@@ -42,7 +42,48 @@ export default async function ProfilePage() {
     .single();
 
   if (!profile) {
+    if (profileError && profileError.code !== "PGRST116") {
+      throw new Error(`Failed to load profile: ${profileError.message}`);
+    }
     redirect("/onboarding");
+  }
+
+  // Fetch mentor-specific columns separately (requires migration to be applied)
+  let mentorData: {
+    ug_college_id?: string | null;
+    ug_course?: string | null;
+    ug_year?: number | null;
+    pg_college_id?: string | null;
+    pg_course?: string | null;
+    pg_specialty?: string | null;
+    pg_year?: number | null;
+    super_college_id?: string | null;
+    super_course?: string | null;
+    super_specialty?: string | null;
+    super_year?: number | null;
+    time_slots?: string[] | null;
+  } | null = null;
+
+  if (profile.role === "mentor") {
+    const { data: mData } = await supabase
+      .from("profiles")
+      .select(`
+        ug_college_id,
+        ug_course,
+        ug_year,
+        pg_college_id,
+        pg_course,
+        pg_specialty,
+        pg_year,
+        super_college_id,
+        super_course,
+        super_specialty,
+        super_year,
+        time_slots
+      `)
+      .eq("user_id", user.id)
+      .single();
+    mentorData = mData;
   }
 
   const college = profile.colleges as {
@@ -54,6 +95,25 @@ export default async function ProfilePage() {
   const collegeLocation = [college?.city, college?.state_name]
     .filter(Boolean)
     .join(", ") || null;
+
+  // Fetch mentor college names if mentor
+  let ugCollegeName: string | null = null;
+  let pgCollegeName: string | null = null;
+  let superCollegeName: string | null = null;
+  if (profile.role === "mentor" && mentorData) {
+    const ids = [mentorData.ug_college_id, mentorData.pg_college_id, mentorData.super_college_id].filter(Boolean) as string[];
+    if (ids.length > 0) {
+      const { data: mentorColleges } = await supabase
+        .from("colleges")
+        .select("id, name")
+        .in("id", ids);
+      const map = new Map((mentorColleges ?? []).map((c) => [c.id, c.name]));
+      ugCollegeName = mentorData.ug_college_id ? map.get(mentorData.ug_college_id) ?? null : null;
+      pgCollegeName = mentorData.pg_college_id ? map.get(mentorData.pg_college_id) ?? null : null;
+      superCollegeName = mentorData.super_college_id ? map.get(mentorData.super_college_id) ?? null : null;
+    }
+  }
+
   const initials = getInitials(profile.display_name);
 
   return (
@@ -88,43 +148,117 @@ export default async function ProfilePage() {
           <h1 className="mt-3 text-xl font-bold text-[#1B3A2D]">
             {profile.display_name}
           </h1>
-          <span className="mt-1 rounded-full bg-[#E6F4F1] px-3 py-0.5 text-xs font-medium capitalize text-[#1B3A2D]">
+          <p className="text-xs text-slate-400">{user.email}</p>
+          <span className="mt-2 rounded-full bg-[#E6F4F1] px-3 py-0.5 text-xs font-medium capitalize text-[#1B3A2D]">
             {profile.role}
           </span>
         </div>
 
         {/* Info cards - mobile-friendly touch targets */}
         <div className="space-y-3">
-          <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              College
-            </p>
-            <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
-              {collegeName ?? "—"}
-            </p>
-            {collegeLocation && (
-              <p className="mt-0.5 text-xs text-slate-500">{collegeLocation}</p>
-            )}
-          </div>
-
-          <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Course
-            </p>
-            <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
-              {profile.course}
-            </p>
-          </div>
-
-          {profile.speciality && (
-            <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                Speciality
-              </p>
-              <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
-                {profile.speciality}
-              </p>
-            </div>
+          {profile.role === "mentee" ? (
+            <>
+              <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  College
+                </p>
+                <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
+                  {collegeName ?? "—"}
+                </p>
+                {collegeLocation && (
+                  <p className="mt-0.5 text-xs text-slate-500">{collegeLocation}</p>
+                )}
+              </div>
+              <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  Course
+                </p>
+                <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
+                  {profile.course ?? "—"}
+                </p>
+              </div>
+              {profile.speciality && (
+                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                    Speciality
+                  </p>
+                  <p className="mt-1 text-[15px] font-medium text-[#1B3A2D]">
+                    {profile.speciality}
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="rounded-md bg-[#E6F4F1] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#1B3A2D]">UG</span>
+                  <span className="text-[11px] font-medium text-slate-400">MBBS</span>
+                </div>
+                <p className="text-[15px] font-semibold text-[#1B3A2D]">{ugCollegeName ?? "—"}</p>
+                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                  {mentorData?.ug_course && (
+                    <span className="text-[13px] text-slate-500">{mentorData.ug_course}</span>
+                  )}
+                  {mentorData?.ug_year && (
+                    <span className="text-[13px] text-slate-400">Batch of {mentorData.ug_year}</span>
+                  )}
+                </div>
+              </div>
+              <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="rounded-md bg-[#EEF2FF] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#3730A3]">PG</span>
+                  {mentorData?.pg_specialty && (
+                    <span className="text-[11px] font-medium text-slate-400">{mentorData.pg_specialty}</span>
+                  )}
+                </div>
+                <p className="text-[15px] font-semibold text-[#1B3A2D]">{pgCollegeName ?? "—"}</p>
+                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                  {mentorData?.pg_course && (
+                    <span className="text-[13px] text-slate-500">{mentorData.pg_course}</span>
+                  )}
+                  {mentorData?.pg_year && (
+                    <span className="text-[13px] text-slate-400">Batch of {mentorData.pg_year}</span>
+                  )}
+                </div>
+              </div>
+              {(mentorData?.super_college_id || mentorData?.super_course || mentorData?.super_specialty) && (
+                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="rounded-md bg-[#FDF4FF] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#7E22CE]">Super</span>
+                    {mentorData?.super_specialty && (
+                      <span className="text-[11px] font-medium text-slate-400">{mentorData.super_specialty}</span>
+                    )}
+                  </div>
+                  <p className="text-[15px] font-semibold text-[#1B3A2D]">{superCollegeName ?? "—"}</p>
+                  <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                    {mentorData?.super_course && (
+                      <span className="text-[13px] text-slate-500">{mentorData.super_course}</span>
+                    )}
+                    {mentorData?.super_year && (
+                      <span className="text-[13px] text-slate-400">Batch of {mentorData.super_year}</span>
+                    )}
+                  </div>
+                </div>
+              )}
+              {mentorData?.time_slots && mentorData.time_slots.length > 0 && (
+                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                    Preferred time slots
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {mentorData.time_slots.map((slot) => (
+                      <span
+                        key={slot}
+                        className="rounded-full bg-[#E6F4F1] px-3 py-1 text-[13px] font-medium text-[#1B3A2D]"
+                      >
+                        {slot}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {profile.bio && (

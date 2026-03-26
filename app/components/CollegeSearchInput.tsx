@@ -132,10 +132,15 @@ export function CollegeSearchInput({
   return (
     <div ref={containerRef} className="relative w-full">
       <input
-        type="hidden"
+        type="text"
         name={name}
         value={selected?.id ?? ""}
         required={required}
+        readOnly
+        tabIndex={-1}
+        aria-hidden
+        onChange={() => {}}
+        className="pointer-events-none absolute h-0 w-0 opacity-0"
       />
       <div className="relative">
         <input

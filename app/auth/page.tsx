@@ -45,11 +45,16 @@ export default function AuthPage() {
       return;
     }
 
+    const redirectUrl =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://med-path-pi.vercel.app';
+
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithOtp({
       email: parsed.data.email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/mentors`,
+        emailRedirectTo: `${redirectUrl}/auth/callback?next=/mentors`,
       },
     });
 
